@@ -40,10 +40,10 @@ func trackDetailsForSSRC(trackDetails []trackDetails, ssrc SSRC) *trackDetails {
 	return nil
 }
 
-func trackDetailsForRID(trackDetails []trackDetails, rid string) *trackDetails {
+func trackDetailsForRID(trackDetails []trackDetails, rid string, mid string) *trackDetails {
 	for i := range trackDetails {
 		for j := range trackDetails[i].rids {
-			if trackDetails[i].rids[j] == rid {
+			if trackDetails[i].mid == mid && trackDetails[i].rids[j] == rid{
 				return &trackDetails[i]
 			}
 		}

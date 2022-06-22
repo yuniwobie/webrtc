@@ -1260,13 +1260,13 @@ func (pc *PeerConnection) configureRTPReceivers(isRenegotiation bool, remoteDesc
 	incomingTracks := trackDetailsFromSDP(pc.log, remoteDesc.parsed)
 
 	if isRenegotiation {
-		for _, t := range currentTransceivers {
-			receiver := t.Receiver()
+		for _, trans := range currentTransceivers {
+			receiver := trans.Receiver()
 			if receiver == nil {
 				continue
 			}
 
-			tracks := t.Receiver().Tracks()
+			tracks := trans.Receiver().Tracks()
 			if len(tracks) == 0 {
 				continue
 			}
@@ -1278,7 +1278,7 @@ func (pc *PeerConnection) configureRTPReceivers(isRenegotiation bool, remoteDesc
 					defer t.mu.Unlock()
 
 					if t.rid != "" {
-						if details := trackDetailsForRID(incomingTracks, t.rid); details != nil {
+						if details := trackDetailsForRID(incomingTracks, t.rid, trans.Mid()); details != nil {
 							t.id = details.id
 							t.streamID = details.streamID
 							continue
@@ -1309,7 +1309,7 @@ func (pc *PeerConnection) configureRTPReceivers(isRenegotiation bool, remoteDesc
 				pc.log.Warnf("Failed to create new RtpReceiver: %s", err)
 				continue
 			}
-			t.setReceiver(receiver)
+			trans.setReceiver(receiver)
 		}
 	}
 
