@@ -331,7 +331,7 @@ func (r *RTPReceiver) streamsForTrack(t *TrackRemote) *trackStreams {
 // readRTP should only be called by a track, this only exists so we can keep state in one place
 func (r *RTPReceiver) readRTP(b []byte, reader *TrackRemote) (n int, a interceptor.Attributes, err error) {
 	<-r.received
-	if t := r.streamsForTrack(reader); t != nil {
+	if t := r.streamsForTrack(reader); t != nil && t.rtpInterceptor != nil {
 		return t.rtpInterceptor.Read(b, a)
 	}
 
